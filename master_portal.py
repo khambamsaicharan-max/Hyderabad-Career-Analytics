@@ -41,7 +41,14 @@ interview_qa = [
 fig = px.bar(df, x="Company", y="Salary", title="Market Intelligence", template="plotly_dark")
 forecast_fig = px.line(x=years, y=forecast_salaries, title="5-Year Growth", markers=True, template="plotly_dark")
 forecast_fig.add_hline(y=3000000, line_dash="dot", line_color="#ef4444")
+# 🔥 ADD THIS NEW LINE HERE 🔥
+fig.update_layout(xaxis_tickangle=-45, margin=dict(b=100)) 
+# (Note: I also added 'margin' so the tilted text doesn't get cut off at the bottom!)
 
+# Chart 2: Future Predictor (Line)
+forecast_fig = px.line(x=years, y=forecast_salaries, 
+                       title="5-Year Career Growth vs. ₹30L Target",
+                       markers=True, template="plotly_dark")
 # --- 5. THE HTML PORTAL ---
 table_rows = "".join([f"<tr><td style='padding:12px; border-bottom:1px solid #334155;'>{item['Skill']}</td><td style='padding:12px; border-bottom:1px solid #334155;'>{item['Question']}</td><td style='padding:12px; border-bottom:1px solid #334155; color:#4ade80;'>{item['Tip']}</td></tr>" for item in interview_qa])
 
