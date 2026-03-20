@@ -6,8 +6,10 @@ from datetime import datetime
 # --- 1. CONFIG & DATA LOADING ---
 csv_file = "hyderabad_jobs.csv"
 last_updated = datetime.now().strftime("%d %b %Y, %I:%M %p")
-github_user = "khambamsaicharan-max" 
-repo_url = f"https://github.com/{github_user}/Hyderabad-Career-Analytics/blob/main"
+
+# 🟢 FIXED REPO LINK: Pointing directly to your GitHub Main Branch
+repo_base = "https://github.com/khambamsaicharan-max/Hyderabad-Career-Analytics/blob/main"
+github_user = "khambamsaicharan-max"
 
 def load_clean_data(file_path):
     if not os.path.exists(file_path):
@@ -77,7 +79,7 @@ html_template = f"""
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saicharan | 30-Day Project Finale</title>
+    <title>Saicharan | Final Analytics Portal</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
@@ -114,8 +116,8 @@ html_template = f"""
         <div class="card" style="border: 2px solid #a855f7; text-align: left;">
             <h2 style="color: #a855f7; margin-bottom: 15px;">📂 Project Architecture (Open Source)</h2>
             <div style="display: flex; flex-wrap: wrap;">
-                <a href="{repo_url}/scraper.py" target="_blank" class="code-link">🐍 Web Scraper</a>
-                <a href="{repo_url}/master_portal.py" target="_blank" class="code-link">⚙️ Analytics Engine</a>
+                <a href="{repo_base}/scraper.py" target="_blank" class="code-link">🐍 Web Scraper</a>
+                <a href="{repo_base}/master_portal.py" target="_blank" class="code-link">⚙️ Analytics Engine</a>
             </div>
         </div>
 
@@ -173,4 +175,4 @@ html_template = f"""
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_template)
 
-print(f"🎉 MISSION COMPLETE: The Finale Dashboard is Live!")
+print(f"🎉 THE FINALE IS COMPLETE!")
