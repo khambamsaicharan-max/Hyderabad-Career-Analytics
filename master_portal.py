@@ -3,10 +3,9 @@ import plotly.express as px
 import os
 from datetime import datetime
 
-# --- 1. DATA LOADING & CONFIG ---
+# --- 1. CONFIG & DATA LOADING ---
 csv_file = "hyderabad_jobs.csv"
 last_updated = datetime.now().strftime("%d %b %Y, %I:%M %p")
-# REPLACE THIS with your actual GitHub Username
 github_user = "khambamsaicharan-max" 
 
 def load_clean_data(file_path):
@@ -18,7 +17,7 @@ def load_clean_data(file_path):
         df.columns = ["Company", "Salary"]
         df['Salary'] = pd.to_numeric(df['Salary'], errors='coerce')
         df = df.dropna()
-        # Quality Filter: Only high-value roles
+        # High-Value Filter
         df = df[df['Salary'] >= 600000]
         return df
     except:
@@ -40,25 +39,37 @@ journey = [
     {"Day": "1-5", "Task": "Scraper Engine Built", "Status": "Done"},
     {"Day": "6-15", "Task": "Data Cleaning & CSV Logic", "Status": "Done"},
     {"Day": "16-25", "Task": "Interactive UI & ML Forecast", "Status": "Done"},
-    {"Day": "26-30", "Task": "AI Integration & Deployment", "Status": "Active"}
+    {"Day": "26-30", "Task": "Advanced Visuals & AI Prep", "Status": "Active"}
 ]
 
 interview_qa = [
     {"Skill": "Python", "Question": "Memory Management?", "Tip": "Mention GC & Reference Counting."},
-    {"Skill": "SQL", "Question": "WHERE vs HAVING?", "Tip": "WHERE filters rows; HAVING filters groups."},
-    {"Skill": "Power BI", "Question": "Calculated Columns vs Measures?", "Tip": "Measures are dynamic aggregates."}
+    {"Skill": "SQL", "Question": "WHERE vs HAVING?", "Tip": "WHERE=Rows, HAVING=Groups."},
+    {"Skill": "Power BI", "Question": "Measures vs Columns?", "Tip": "Measures are dynamic aggregates."}
 ]
 
 # --- 4. CREATE THE VISUALS ---
+
+# Chart 1: Market Bar
 fig = px.bar(df, x="Company", y="Salary", title="Live Hyderabad Market Intelligence",
              color="Salary", color_continuous_scale="Viridis", template="plotly_dark")
 fig.update_layout(xaxis_tickangle=-45, margin=dict(b=150))
 
+# Chart 2: Future Forecast
 forecast_fig = px.line(x=years, y=forecast_salaries, title="5-Year Career Growth vs. ₹30L Target",
                        markers=True, template="plotly_dark")
 forecast_fig.add_hline(y=3000000, line_dash="dot", line_color="#ef4444", 
                        annotation_text="🎯 ₹30L TARGET", annotation_position="bottom right")
 forecast_fig.update_traces(line_color='#38bdf8', line_width=4)
+
+# Chart 3: NEW RADAR CHART
+radar_df = pd.DataFrame(dict(
+    r=[90, 85, 80, 95, 75],
+    theta=['Python','SQL','Data Viz','Web Scraping','Logic']
+))
+radar_fig = px.line_polar(radar_df, r='r', theta='theta', line_close=True,
+                          template="plotly_dark", title="Technical Balance")
+radar_fig.update_traces(fill='toself', line_color='#4ade80')
 
 # --- 5. GENERATE THE HTML PORTAL ---
 table_rows = "".join([f"<tr><td style='padding:12px; border-bottom:1px solid #334155;'>{item['Skill']}</td><td style='padding:12px; border-bottom:1px solid #334155;'>{item['Question']}</td><td style='padding:12px; border-bottom:1px solid #334155; color:#4ade80;'>{item['Tip']}</td></tr>" for item in interview_qa])
@@ -71,12 +82,14 @@ html_template = f"""
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saicharan | Career Analytics</title>
+    <title>Saicharan | Advanced Analytics Portal</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {{ background: #0b1120; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }}
-        .container {{ max-width: 900px; margin: auto; padding-bottom: 100px; }}
+        .container {{ max-width: 1000px; margin: auto; padding-bottom: 100px; }}
         .card {{ background: #111827; padding: 30px; border-radius: 20px; margin-bottom: 30px; border: 1px solid #1f2937; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }}
+        .flex-row {{ display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }}
+        .flex-item {{ flex: 1; min-width: 450px; }}
         h1 {{ color: #38bdf8; font-size: 2.5rem; margin: 0; }}
         .timestamp {{ font-size: 0.8rem; color: #4ade80; margin-top: 10px; font-weight: bold; }}
         table {{ width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e293b; border-radius: 10px; overflow: hidden; }}
@@ -93,7 +106,11 @@ html_template = f"""
         </div>
 
         <div class="card">{fig.to_html(full_html=False, include_plotlyjs='cdn')}</div>
-        <div class="card">{forecast_fig.to_html(full_html=False, include_plotlyjs='cdn')}</div>
+
+        <div class="flex-row">
+            <div class="card flex-item">{radar_fig.to_html(full_html=False, include_plotlyjs='cdn')}</div>
+            <div class="card flex-item">{forecast_fig.to_html(full_html=False, include_plotlyjs='cdn')}</div>
+        </div>
 
         <div class="card" style="text-align: left; border-top: 4px solid #fbbf24;">
             <h2 style="color: #fbbf24;">🎯 Interview Preparation Edge</h2>
@@ -103,18 +120,14 @@ html_template = f"""
             </table>
         </div>
 
-        <div class="card" style="text-align: left; border-left: 4px solid #38bdf8;">
-            <h2 style="color: #38bdf8;">🛣️ Project Development Roadmap</h2>
-            <div style="margin-top: 15px;">
-                {timeline_html}
+        <div class="flex-row">
+            <div class="card flex-item" style="text-align: left; border-left: 4px solid #38bdf8;">
+                <h2 style="color: #38bdf8;">🛣️ Project Roadmap</h2>
+                <div style="margin-top: 15px;">{timeline_html}</div>
             </div>
-        </div>
-
-        <div class="card" style="border: 2px solid #6366f1; background: rgba(99, 102, 241, 0.05);">
-            <h2 style="color: #6366f1; margin-bottom: 20px;">📊 GitHub Development Pulse</h2>
-            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-                <img src="https://github-readme-stats.vercel.app/api?username={github_user}&show_icons=true&theme=tokyonight&hide_border=true" style="max-width: 100%; height: auto; border-radius: 10px;">
-                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username={github_user}&layout=compact&theme=tokyonight&hide_border=true" style="max-width: 100%; height: auto; border-radius: 10px;">
+            <div class="card flex-item" style="border: 2px solid #6366f1;">
+                <h2 style="color: #6366f1; margin-bottom: 20px;">📊 GitHub Pulse</h2>
+                <img src="https://github-readme-stats.vercel.app/api?username={github_user}&show_icons=true&theme=tokyonight&hide_border=true" style="width: 100%; border-radius: 10px;">
             </div>
         </div>
 
@@ -136,7 +149,7 @@ html_template = f"""
         function copyResume() {{
             var content = document.getElementById('resume-content').innerText;
             navigator.clipboard.writeText(content).then(() => {{
-                alert("Resume Summary Copied! Perfect for your LinkedIn 'About' section.");
+                alert("Resume Summary Copied!");
             }});
         }}
     </script>
@@ -147,4 +160,4 @@ html_template = f"""
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_template)
 
-print(f"✅ DAY 27 COMPLETE: Full High-End Portal with GitHub Pulse Generated!")
+print(f"✅ DAY 28 COMPLETE: Radar Chart & Split-Layout Portal Generated!")
