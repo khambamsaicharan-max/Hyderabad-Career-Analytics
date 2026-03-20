@@ -7,6 +7,7 @@ from datetime import datetime
 csv_file = "hyderabad_jobs.csv"
 last_updated = datetime.now().strftime("%d %b %Y, %I:%M %p")
 github_user = "khambamsaicharan-max" 
+repo_url = f"https://github.com/{{github_user}}/Hyderabad-Career-Analytics/blob/main"
 
 def load_clean_data(file_path):
     if not os.path.exists(file_path):
@@ -17,7 +18,7 @@ def load_clean_data(file_path):
         df.columns = ["Company", "Salary"]
         df['Salary'] = pd.to_numeric(df['Salary'], errors='coerce')
         df = df.dropna()
-        # High-Value Filter
+        # High-Value Filter (Focusing on the 25L+ Goal)
         df = df[df['Salary'] >= 600000]
         return df
     except:
@@ -62,7 +63,7 @@ forecast_fig.add_hline(y=3000000, line_dash="dot", line_color="#ef4444",
                        annotation_text="🎯 ₹30L TARGET", annotation_position="bottom right")
 forecast_fig.update_traces(line_color='#38bdf8', line_width=4)
 
-# Chart 3: NEW RADAR CHART
+# Chart 3: Skill Radar
 radar_df = pd.DataFrame(dict(
     r=[90, 85, 80, 95, 75],
     theta=['Python','SQL','Data Viz','Web Scraping','Logic']
@@ -95,6 +96,8 @@ html_template = f"""
         table {{ width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e293b; border-radius: 10px; overflow: hidden; }}
         .btn {{ background: #4ade80; color: #0b1120; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }}
         .contact-btn {{ position: fixed; bottom: 30px; right: 30px; background: #38bdf8; color: #0b1120; padding: 15px 25px; border-radius: 50px; font-weight: bold; text-decoration: none; z-index: 1000; box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); }}
+        .code-link {{ display: inline-block; color: #d1d5db; text-decoration: none; background: #334155; padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; margin: 5px; }}
+        .code-link:hover {{ background: #a855f7; color: white; }}
     </style>
 </head>
 <body>
@@ -110,6 +113,14 @@ html_template = f"""
         <div class="flex-row">
             <div class="card flex-item">{radar_fig.to_html(full_html=False, include_plotlyjs='cdn')}</div>
             <div class="card flex-item">{forecast_fig.to_html(full_html=False, include_plotlyjs='cdn')}</div>
+        </div>
+
+        <div class="card" style="border: 2px solid #a855f7; text-align: left;">
+            <h2 style="color: #a855f7; margin-bottom: 15px;">📂 Open Source Assets</h2>
+            <div style="display: flex; flex-wrap: wrap;">
+                <a href="{repo_url}/scraper.py" target="_blank" class="code-link">🐍 View Scraper Logic</a>
+                <a href="{repo_url}/master_portal.py" target="_blank" class="code-link">⚙️ View Dashboard Engine</a>
+            </div>
         </div>
 
         <div class="card" style="text-align: left; border-top: 4px solid #fbbf24;">
@@ -160,4 +171,4 @@ html_template = f"""
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_template)
 
-print(f"✅ DAY 28 COMPLETE: Radar Chart & Split-Layout Portal Generated!")
+print(f"✅ DAY 29 COMPLETE: Open Source Dashboard is 100% Online!")
