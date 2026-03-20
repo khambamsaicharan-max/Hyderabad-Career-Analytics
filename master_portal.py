@@ -6,6 +6,8 @@ from datetime import datetime
 # --- 1. DATA LOADING & CONFIG ---
 csv_file = "hyderabad_jobs.csv"
 last_updated = datetime.now().strftime("%d %b %Y, %I:%M %p")
+# REPLACE THIS with your actual GitHub Username
+github_user = "khambamsaicharan-max" 
 
 def load_clean_data(file_path):
     if not os.path.exists(file_path):
@@ -69,7 +71,7 @@ html_template = f"""
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saicharan | Project Roadmap</title>
+    <title>Saicharan | Career Analytics</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {{ background: #0b1120; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }}
@@ -108,6 +110,14 @@ html_template = f"""
             </div>
         </div>
 
+        <div class="card" style="border: 2px solid #6366f1; background: rgba(99, 102, 241, 0.05);">
+            <h2 style="color: #6366f1; margin-bottom: 20px;">📊 GitHub Development Pulse</h2>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+                <img src="https://github-readme-stats.vercel.app/api?username={github_user}&show_icons=true&theme=tokyonight&hide_border=true" style="max-width: 100%; height: auto; border-radius: 10px;">
+                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username={github_user}&layout=compact&theme=tokyonight&hide_border=true" style="max-width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </div>
+
         <div class="card" style="text-align: left; border: 2px solid #4ade80;">
             <h2 style="color: #4ade80;">📄 Professional Resume Summary</h2>
             <div id="resume-content" style="color: #d1d5db; line-height: 1.8;">
@@ -137,4 +147,4 @@ html_template = f"""
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_template)
 
-print(f"✅ DAY 26 COMPLETE: Full High-End Portal Generated!")
+print(f"✅ DAY 27 COMPLETE: Full High-End Portal with GitHub Pulse Generated!")
